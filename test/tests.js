@@ -9,7 +9,7 @@ var select = require('../lib/index.js');
 function getNonChainProperties(object){
   function isNotChainMethod(name){
       // remove initial _
-      return Object.keys(select).indexOf(name.substring(1)) === -1;
+      return Object.keys(select).indexOf(name.substring(1)) === -1 || (typeof object[name] !== 'function');
   }
   
   return Object.keys(object).filter(isNotChainMethod);
@@ -84,6 +84,51 @@ describe('chaining', function(){
       projection._id.should.equal(false);
       projection.email.should.equal(true);
       projection['children.name'].should.equal(true);
+    });
+  });
+  
+  describe('include then noId', function(){
+    var projection;
+    beforeEach(function() {
+      projection = select.include(['email', 'children.name'])._noId();
+    });
+    it('should only have _id and excluded values', function(){
+      getNonChainProperties(projection).length.should.equal(3);
+    });
+    it('should set _id to false other values to true', function(){
+      projection._id.should.equal(false);
+      projection.email.should.equal(true);
+      projection['children.name'].should.equal(true);
+    });
+  });
+  
+  describe('include then noId', function(){
+    var projection;
+    beforeEach(function() {
+      projection = select.include(['email', 'children.name'])._noId();
+    });
+    it('should only have _id and included values', function(){
+      getNonChainProperties(projection).length.should.equal(3);
+    });
+    it('should set _id to false other values to true', function(){
+      projection._id.should.equal(false);
+      projection.email.should.equal(true);
+      projection['children.name'].should.equal(true);
+    });
+  });
+  
+  describe('exclude then noId', function(){
+    var projection;
+    beforeEach(function() {
+      projection = select.exclude(['email', 'children.name'])._noId();
+    });
+    it('should only have _id and excluded values', function(){
+      getNonChainProperties(projection).length.should.equal(3);
+    });
+    it('should set all values to false', function(){
+      projection._id.should.equal(false);
+      projection.email.should.equal(false);
+      projection['children.name'].should.equal(false);
     });
   });
 });

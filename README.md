@@ -50,7 +50,7 @@ console.log(projection); // { "_id": false, "name": false, "email": false, "chil
 ``` JavaScript
 var select = require('mongo-select');
 
-var projection = select.`(["name", "email", "children.name"])._noId();
+var projection = select.include(["name", "email", "children.name"])._noId();
 
 console.log(projection); // { "_id": false, "name": true, "email": true, "children.name": true };
 ```
