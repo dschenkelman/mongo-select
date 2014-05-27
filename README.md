@@ -14,9 +14,9 @@ Usage
 ``` JavaScript
 var select = require('mongo-select');
 
-var fields = select.include(['name', 'email', 'children.name']);
+var projection = select.include(['name', 'email', 'children.name']).make();
 
-console.log(fields); // { "name": false, "email": false, "children.name": false };
+console.log(projection); // { "name": false, "email": false, "children.name": false };
 ```
 
 ### Excluding fields
@@ -37,11 +37,20 @@ var projection = select.noId();
 console.log(projection); // { "_id": false };
 ```
 
-### Chaninig
+### Chaining
+To provide a fluent interface the chaining methods begin with `_`. Otherwise this might affect documents with fields named _exclude_, _include_, _noId_.
 ``` JavaScript
 var select = require('mongo-select');
 
-var projection = select.noId().exclude(["name", "email", "children.name"]);
+var projection = select.noId()._exclude(["name", "email", "children.name"]);
 
 console.log(projection); // { "_id": false, "name": false, "email": false, "children.name": false };
+```
+
+``` JavaScript
+var select = require('mongo-select');
+
+var projection = select.`(["name", "email", "children.name"])._noId();
+
+console.log(projection); // { "_id": false, "name": true, "email": true, "children.name": true };
 ```
