@@ -146,6 +146,34 @@ describe('chaining', function(){
     });
   });
   
+  describe('exclude then exclude with array projection', function(){
+    var projection;
+    beforeEach(function() {
+      projection = select.exclude(['children'])._exclude(['children.name', 'countries.capital']);
+    });
+    it('should only have excluded values', function(){
+      getNonChainProperties(projection).length.should.equal(2);
+    });
+    it('should set all values to false', function(){
+      projection.children.should.equal(false);
+      projection['countries.capital'].should.equal(false);
+    });
+  });
+
+  describe('exclude with array projection then exclude', function(){
+    var projection;
+    beforeEach(function() {
+      projection = select.exclude(['children.name', 'countries.capital'])._exclude(['children']);
+    });
+    it('should only have excluded values', function(){
+      getNonChainProperties(projection).length.should.equal(2);
+    });
+    it('should set all values to false', function(){
+      projection.children.should.equal(false);
+      projection['countries.capital'].should.equal(false);
+    });
+  });
+  
   describe('include then include', function(){
     var projection;
     beforeEach(function() {
@@ -164,11 +192,8 @@ describe('chaining', function(){
 describe('always', function(){
   describe('excluding', function() {
     beforeEach(function() {
-      select.exclude(['name', 'email'])._always();
-    });
-    
-    afterEach(function(){
       select.clear();
+      select.exclude(['name', 'email'])._always();
     });
     
     it('should add excluded fields to future exclusions', function(){
@@ -198,14 +223,36 @@ describe('always', function(){
       projection.name.should.equal(false);
       projection.email.should.equal(false);
     });
+    
+    describe('with array projection', function(){
+      beforeEach(function() {
+        select.clear();
+        select.exclude(['children.name', 'children', 'countries.capital', 'name'])._always();
+      });
+      
+      it('should only exclude top level array field with empty exclusion', function(){
+        var projection = select.exclude([]);
+        projection.children.should.equal(false);
+        projection.name.should.equal(false);
+        projection['countries.capital'].should.equal(false);
+        getNonChainProperties(projection).length.should.equal(3);
+      });
+      
+      it('should only exclude top level array field with non-empty exclusion', function(){
+        var projection = select.exclude(['children.age', 'countries.population', 'email']);
+        projection.children.should.equal(false);
+        projection.email.should.equal(false);
+        projection.name.should.equal(false);
+        projection['countries.capital'].should.equal(false);
+        projection['countries.population'].should.equal(false);
+        getNonChainProperties(projection).length.should.equal(5);
+      });
+    });
   });
   describe('including', function() {
     beforeEach(function() {
-      select.include(['name', 'email'])._always();
-    });
-    
-    afterEach(function(){
       select.clear();
+      select.include(['name', 'email'])._always();
     });
     
     it('should add included fields to future inclusions', function(){
