@@ -196,6 +196,12 @@ describe('always', function(){
       (typeof projection.email === 'undefined').should.equal(true);
       projection['children.name'].should.equal(true);
     });
+    
+    it('should allow for future empty exclusions', function(){
+      var projection = select.exclude([]);
+      projection.name.should.equal(false);
+      projection.email.should.equal(false);
+    });
   });
   describe('including', function() {
     beforeEach(function() {
@@ -226,6 +232,12 @@ describe('always', function(){
       (typeof projection.name === 'undefined').should.equal(true);
       (typeof projection.email === 'undefined').should.equal(true);
       projection['children.name'].should.equal(false);
+    });
+    
+    it('should allow for future empty inclusions', function(){
+      var projection = select.include([]);
+      projection.name.should.equal(true);
+      projection.email.should.equal(true);
     });
   });
 });
