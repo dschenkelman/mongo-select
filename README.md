@@ -75,7 +75,7 @@ console.log(projection); // { '_id': false, 'name': true, 'email': true, 'childr
 ```
 
 ### Permanent exclusion/inclusion
-Sometimes it is important to always exclude or include a set of fields. That means that if they are included they won't make it into the projection and viceversa:
+Sometimes it is important to always exclude or include a set of fields. That means that if they are permanently excluded and then specifically included they won't make it into the projection and viceversa:
 
 ``` JavaScript
 var select = require('mongo-select');
