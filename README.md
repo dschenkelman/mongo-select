@@ -16,7 +16,7 @@ var select = require('mongo-select');
 
 var projection = select.include(['name', 'email', 'children.name']).make();
 
-console.log(projection); // { "name": false, "email": false, "children.name": false };
+console.log(projection); // { 'name': false, 'email': false, 'children.name': false };
 ```
 
 ### Excluding fields
@@ -25,7 +25,7 @@ var select = require('mongo-select');
 
 var projection = select.exclude(['name', 'email', 'children.name']);
 
-console.log(projection); // { "name": false, "email": false, "children.name": false };
+console.log(projection); // { 'name': false, 'email': false, 'children.name': false };
 ```
 
 ### Excluding _id
@@ -34,7 +34,7 @@ var select = require('mongo-select');
 
 var projection = select.noId();
 
-console.log(projection); // { "_id": false };
+console.log(projection); // { '_id': false };
 ```
 
 ### Chaining
@@ -42,15 +42,36 @@ To provide a fluent interface the chaining methods begin with `_`. Otherwise thi
 ``` JavaScript
 var select = require('mongo-select');
 
-var projection = select.noId()._exclude(["name", "email", "children.name"]);
+var projection = select.noId()._exclude(['name', 'email', 'children.name']);
 
-console.log(projection); // { "_id": false, "name": false, "email": false, "children.name": false };
+console.log(projection); // { '_id': false, 'name': false, 'email': false, 'children.name': false };
 ```
 
 ``` JavaScript
 var select = require('mongo-select');
 
-var projection = select.include(["name", "email", "children.name"])._noId();
+var projection = select.include(['name', 'email', 'children.name'])._noId();
 
-console.log(projection); // { "_id": false, "name": true, "email": true, "children.name": true };
+console.log(projection); // { '_id': false, 'name': true, 'email': true, 'children.name': true };
+```
+
+### Permanent exclusion/inclusion
+Sometimes it is important to always exclude or include a set of fields. That means that if they are included they won't make it into the projection and viceversa:
+
+``` JavaScript
+var select = require('mongo-select');
+
+select.exclude(['name', 'email', 'children.name'])._always();
+
+var exclusion = select.exclude(['address']);
+
+console.log(exclusion); // { 'name': false, 'email': false, 'children.name': false };
+
+var inclusion = select.include(['name', 'email']);
+
+console.log(inclusion); // { };
+```
+To clear permanent registrations simply
+``` JavaScript
+select.clear();
 ```

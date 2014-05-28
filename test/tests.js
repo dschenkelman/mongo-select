@@ -1,7 +1,7 @@
 'use strict';
 
 /*jshint node:true */
-/*global describe, it, beforeEach*/
+/*global describe, it, afterEach, beforeEach*/
 
 require('should');
 var select = require('../lib/index.js');
@@ -9,7 +9,11 @@ var select = require('../lib/index.js');
 function getNonChainProperties(object){
   function isNotChainMethod(name){
       // remove initial _
-      return Object.keys(select).indexOf(name.substring(1)) === -1 || (typeof object[name] !== 'function');
+      var chainMethods = Object.keys(select).concat(['always']);
+      
+      var result = chainMethods.indexOf(name.substring(1)) === -1 || (typeof object[name] !== 'function');
+      
+      return result;
   }
   
   return Object.keys(object).filter(isNotChainMethod);
@@ -128,6 +132,57 @@ describe('chaining', function(){
     it('should set all values to false', function(){
       projection._id.should.equal(false);
       projection.email.should.equal(false);
+      projection['children.name'].should.equal(false);
+    });
+  });
+});
+
+describe('always', function(){
+  describe('excluding', function() {
+    beforeEach(function() {
+      select.exclude(['name', 'email'])._always();
+    });
+    
+    afterEach(function(){
+      select.clear();
+    });
+    
+    it('should add excluded fields to future exclusions', function(){
+      var projection = select.exclude(['children.name'])._noId();
+      projection._id.should.equal(false);
+      projection.name.should.equal(false);
+      projection.email.should.equal(false);
+      projection['children.name'].should.equal(false);
+    });
+    
+    it('should remove included fields from future inclusions', function(){
+      var projection = select.include(['children.name', 'name', 'email']);
+      (typeof projection.name === 'undefined').should.equal(true);
+      (typeof projection.email === 'undefined').should.equal(true);
+      projection['children.name'].should.equal(true);
+    });
+  });
+  describe('including', function() {
+    beforeEach(function() {
+      select.include(['name', 'email'])._always();
+    });
+    
+    afterEach(function(){
+      select.clear();
+    });
+    
+    it('should add included fields to future inclusions', function(){
+      var projection = select.include(['children.name'])._noId();
+      projection._id.should.equal(false);
+      projection.name.should.equal(true);
+      projection.email.should.equal(true);
+      projection['children.name'].should.equal(true);
+    });
+    
+    it('should remove included fields from future exclusions', function(){
+      var projection = select.exclude(['children.name', 'name', 'email']);
+      (typeof projection.name === 'undefined').should.equal(true);
+      (typeof projection.email === 'undefined').should.equal(true);
       projection['children.name'].should.equal(false);
     });
   });
