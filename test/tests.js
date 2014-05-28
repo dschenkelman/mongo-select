@@ -135,6 +135,34 @@ describe('chaining', function(){
       projection['children.name'].should.equal(false);
     });
   });
+  
+  describe('exclude then exclude', function(){
+    var projection;
+    beforeEach(function() {
+      projection = select.exclude(['email'])._exclude(['name']);
+    });
+    it('should only have excluded values', function(){
+      getNonChainProperties(projection).length.should.equal(2);
+    });
+    it('should set all values to false', function(){
+      projection.email.should.equal(false);
+      projection.name.should.equal(false);
+    });
+  });
+  
+  describe('include then include', function(){
+    var projection;
+    beforeEach(function() {
+      projection = select.include(['email'])._include(['name']);
+    });
+    it('should only have included values', function(){
+      getNonChainProperties(projection).length.should.equal(2);
+    });
+    it('should set all values to false', function(){
+      projection.email.should.equal(true);
+      projection.name.should.equal(true);
+    });
+  });
 });
 
 describe('always', function(){
