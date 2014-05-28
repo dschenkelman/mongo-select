@@ -183,8 +183,15 @@ describe('always', function(){
       projection['children.name'].should.equal(false);
     });
     
-    it('should remove included fields from future inclusions', function(){
+    it('should remove excluded fields from future inclusions', function(){
       var projection = select.include(['children.name', 'name', 'email']);
+      (typeof projection.name === 'undefined').should.equal(true);
+      (typeof projection.email === 'undefined').should.equal(true);
+      projection['children.name'].should.equal(true);
+    });
+    
+    it('should not add excluded fields to be excluded in future inclusions', function(){
+      var projection = select.include(['children.name']);
       (typeof projection.name === 'undefined').should.equal(true);
       (typeof projection.email === 'undefined').should.equal(true);
       projection['children.name'].should.equal(true);
@@ -209,6 +216,13 @@ describe('always', function(){
     
     it('should remove included fields from future exclusions', function(){
       var projection = select.exclude(['children.name', 'name', 'email']);
+      (typeof projection.name === 'undefined').should.equal(true);
+      (typeof projection.email === 'undefined').should.equal(true);
+      projection['children.name'].should.equal(false);
+    });
+    
+    it('should not add included fields to be included in future exclusions', function(){
+      var projection = select.exclude(['children.name']);
       (typeof projection.name === 'undefined').should.equal(true);
       (typeof projection.email === 'undefined').should.equal(true);
       projection['children.name'].should.equal(false);
