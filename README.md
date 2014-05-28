@@ -11,7 +11,7 @@ npm install mongo-select
 Introduction
 ---------
 ``` JavaScript
-var select = require('mongo-select');
+var select = require('mongo-select').select();
 var mongodb = require('mongodb');
 
 var MongoClient = mongodb.MongoClient;
@@ -31,7 +31,7 @@ Examples
 ----------
 ### Including fields
 ``` JavaScript
-var select = require('mongo-select');
+var select = require('mongo-select').select();
 
 var projection = select.include(['name', 'email', 'children.name']).make();
 
@@ -40,7 +40,7 @@ console.log(projection); // { 'name': false, 'email': false, 'children.name': fa
 
 ### Excluding fields
 ``` JavaScript
-var select = require('mongo-select');
+var select = require('mongo-select').select();
 
 var projection = select.exclude(['name', 'email', 'children.name']);
 
@@ -49,7 +49,7 @@ console.log(projection); // { 'name': false, 'email': false, 'children.name': fa
 
 ### Excluding _id
 ``` JavaScript
-var select = require('mongo-select');
+var select = require('mongo-select').select();
 
 var projection = select.noId();
 
@@ -59,7 +59,7 @@ console.log(projection); // { '_id': false };
 ### Chaining
 To provide a fluent interface the chaining methods begin with `_`. Otherwise this might affect documents with fields named _exclude_, _include_, _noId_.
 ``` JavaScript
-var select = require('mongo-select');
+var select = require('mongo-select').select();
 
 var projection = select.noId()._exclude(['name', 'email', 'children.name']);
 
@@ -67,7 +67,7 @@ console.log(projection); // { '_id': false, 'name': false, 'email': false, 'chil
 ```
 
 ``` JavaScript
-var select = require('mongo-select');
+var select = require('mongo-select').select();
 
 var projection = select.include(['name', 'email', 'children.name'])._noId();
 
@@ -78,7 +78,7 @@ console.log(projection); // { '_id': false, 'name': true, 'email': true, 'childr
 Sometimes it is important to always exclude or include a set of fields. That means that if they are permanently excluded and then specifically included they won't make it into the projection and viceversa:
 
 ``` JavaScript
-var select = require('mongo-select');
+var select = require('mongo-select').select();
 
 select.exclude(['name', 'email', 'children.name'])._always();
 

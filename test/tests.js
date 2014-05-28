@@ -4,16 +4,12 @@
 /*global describe, it, afterEach, beforeEach*/
 
 require('should');
-var select = require('../lib/index.js');
+var select = require('../lib/index.js').select();
 
 function getNonChainProperties(object){
   function isNotChainMethod(name){
       // remove initial _
-      var chainMethods = Object.keys(select).concat(['always']);
-      
-      var result = chainMethods.indexOf(name.substring(1)) === -1 || (typeof object[name] !== 'function');
-      
-      return result;
+      return ['exclude', 'include', 'always', 'noId'].indexOf(name.substring(1)) === -1 || (typeof object[name] !== 'function');
   }
   
   return Object.keys(object).filter(isNotChainMethod);
