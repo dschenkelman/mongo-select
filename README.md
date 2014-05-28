@@ -8,8 +8,27 @@ Installing
 npm install mongo-select
 ```
 
-Usage
-------
+Introduction
+---------
+``` JavaScript
+var select = require('mongo-select');
+var mongodb = require('mongodb');
+
+var MongoClient = mongodb.MongoClient;
+
+MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+  if(err) throw err;
+
+  var users = db.collection('users');
+  scripts = users.find({}, select.include(['name', 'email']), 
+    function(err, result){
+      // code here, access to only result[i]._id, result[i].name and result[i].email
+    });
+});
+```
+
+Examples
+----------
 ### Including fields
 ``` JavaScript
 var select = require('mongo-select');
@@ -74,4 +93,11 @@ console.log(inclusion); // { };
 To clear permanent registrations simply
 ``` JavaScript
 select.clear();
+```
+
+Contributing
+---------
+Pull requests and issues are more than welcome. When submitting a PR make sure to run the tests:
+``` Shell
+npm test
 ```
