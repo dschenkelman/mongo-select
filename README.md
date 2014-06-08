@@ -33,7 +33,7 @@ Examples
 ``` JavaScript
 var select = require('mongo-select').select();
 
-var projection = select.include(['name', 'email', 'children.name']).make();
+var projection = select.include(['name', 'email', 'children.name']);
 
 console.log(projection); // { 'name': false, 'email': false, 'children.name': false };
 ```
