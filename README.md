@@ -35,7 +35,7 @@ var select = require('mongo-select').select();
 
 var projection = select.include(['name', 'email', 'children.name']);
 
-console.log(projection); // { 'name': false, 'email': false, 'children.name': false };
+console.log(projection); // { 'name': true, 'email': true, 'children.name': true };
 ```
 
 ### Excluding fields
@@ -88,7 +88,7 @@ console.log(exclusion); // { 'name': false, 'email': false, 'children.name': fal
 
 var inclusion = select.include(['name', 'email']);
 
-console.log(inclusion); // { };
+console.log(inclusion); // { 'children.name': true };
 ```
 To clear permanent registrations simply
 ``` JavaScript
