@@ -2,10 +2,13 @@
   "name": "mongo-select",
   "version": "0.1.3",
   "description": "Module to help create projection objects when working with mongodb",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "prepublish": "tsc --build tsconfig.json",
     "test": "mocha --reporter list",
-    "pretest": "find lib test -name '*.js' -print0 | xargs -0 jshint"
+    "pretest": "find dist test -name '*.js' -print0 | xargs -0 jshint"
   },
   "repository": {
     "type": "git",
@@ -22,11 +25,13 @@
   },
   "jshintConfig": {
     "strict": "true",
-    "globalstrict": "true"
+    "globalstrict": "true",
+    "esversion": 6
   },
   "devDependencies": {
-    "jshint": "^2.4.4",
-    "should": "^3.1.3",
-    "mocha": "^1.18.0"
+    "jshint": "^2.12.0",
+    "mocha": "^8.4.0",
+    "should": "^13.2.3",
+    "typescript": "^4.3.2"
   }
 }
